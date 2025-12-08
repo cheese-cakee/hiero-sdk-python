@@ -31,9 +31,14 @@ jobs:
           egress-policy: audit
 
       - name: Check for merge conflicts
-        
+      
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
         with:
           script: |
-            const script = require('./scripts/merge_conflict_helpers.js')
+            const path = require('path')
+            // Fix: Use the workspace path to reliably find the script
+            const scriptPath = path.join(process.env.GITHUB_WORKSPACE, 'scripts/merge_conflict_helpers.js')
+            
+            console.log(`Loading script from: ${scriptPath}`)
+            const script = require(scriptPath)
             await script({github, context, core})
