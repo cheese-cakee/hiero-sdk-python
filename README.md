@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/license-apache2-blue.svg)](LICENSE)
 
 A Python SDK for interacting with the Hedera Hashgraph platform.
+This is the BASE branch version
 
 
 ## Quick Start
