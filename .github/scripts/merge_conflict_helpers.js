@@ -1,6 +1,6 @@
 // scripts/merge_conflict_helpers.js
 
-const BOT_SIGNATURE = '';
+const BOT_SIGNATURE = '[merge-conflict bot]';
 
 module.exports = async ({ github, context, core }) => {
   const { owner, repo } = context.repo;
