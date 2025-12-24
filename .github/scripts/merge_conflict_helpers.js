@@ -1,4 +1,4 @@
-const BOT_SIGNATURE = '';
+const BOT_SIGNATURE = '[MergeConflictBotSignature-v1]';
 
 module.exports = async ({ github, context, core }) => {
   const { owner, repo } = context.repo;
