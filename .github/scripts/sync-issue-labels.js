@@ -1,6 +1,3 @@
-const CLOSING_REFERENCE_REGEX =
-  /\b(?:fix(?:es|ed)?|close(?:s|d)?|resolve(?:s|d)?)\s*:?\s*((?:#\d+)(?:\s*(?:,|and)\s*#\d+)*)/gi;
-
 function resolveExecutionContext(context) {
   const isDryRun = /^true$/i.test(process.env.DRY_RUN || "");
   const prNumber = Number(process.env.PR_NUMBER) || context.payload.pull_request?.number;
@@ -18,9 +15,11 @@ function isBotAuthor(login = "") {
 }
 
 function parseIssueNumbers(prBody) {
+  const closingReferenceRegex =
+    /\b(?:fix(?:es|ed)?|close(?:s|d)?|resolve(?:s|d)?)\s*:?\s*((?:#\d+)(?:\s*(?:,|and)\s*#\d+)*)/gi;
   const numbers = new Set();
   let match;
-  while ((match = CLOSING_REFERENCE_REGEX.exec(prBody)) !== null) {
+  while ((match = closingReferenceRegex.exec(prBody)) !== null) {
     const text = match[1] || "";
     for (const n of text.matchAll(/#(\d+)/g)) {
       numbers.add(Number(n[1]));
@@ -83,7 +82,8 @@ async function fetchIssueLabels(github, owner, repo, issueNumber) {
 
 function computeDelta(existingLabels, issueLabels) {
   const existing = new Set(existingLabels);
-  return issueLabels.filter((l) => !existing.has(l));
+  const dedupedIssueLabels = [...new Set(issueLabels)];
+  return dedupedIssueLabels.filter((l) => !existing.has(l));
 }
 
 function logResults(prNum, toAdd, existing) {
