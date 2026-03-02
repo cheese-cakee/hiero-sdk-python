@@ -14,17 +14,15 @@ function isBotAuthor(login = "") {
   return /\[bot\]$/i.test(login) || /dependabot/i.test(login);
 }
 
-function extractIssueNumbers(text) {
-  return [...text.matchAll(/#(\d+)/g)].map((n) => Number(n[1]));
-}
-
-function extractLinkedIssueNumbers(prBody) {
+function parseIssueNumbers(prBody) {
   const closingReferenceRegex =
     /\b(?:fix(?:es|ed)?|close(?:s|d)?|resolve(?:s|d)?)\s*:?\s*((?:#\d+)(?:\s*(?:,|and)\s*#\d+)*)/gi;
   const numbers = new Set();
-  for (const match of prBody.matchAll(closingReferenceRegex)) {
-    for (const issueNumber of extractIssueNumbers(match[1] || "")) {
-      numbers.add(issueNumber);
+  let match;
+  while ((match = closingReferenceRegex.exec(prBody)) !== null) {
+    const text = match[1] || "";
+    for (const n of text.matchAll(/#(\d+)/g)) {
+      numbers.add(Number(n[1]));
     }
   }
   return [...numbers];
@@ -101,7 +99,7 @@ async function syncLabels({ github, context }) {
   console.log(`[sync] Processing PR #${prNumber} in ${owner}/${repo} (dry_run=${isDryRun}).`);
 
   const prData = await fetchPrData(github, context, prNumber);
-  const linkedIssues = extractLinkedIssueNumbers(prData?.body || "");
+  const linkedIssues = parseIssueNumbers(prData?.body || "");
 
   const skip = checkSkipConditions(prData?.user?.login || "", linkedIssues);
   if (skip.skip) {

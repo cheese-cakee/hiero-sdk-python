@@ -60,6 +60,7 @@ This changelog is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.
 - Updated CodeRabbit workflow and script review instructions to nudge higher-quality patterns without imposing rigid rules (`#1799`)
 - Added hiero-sdk-js to the next issue recommendation bot (`#1847`)
 - Added workflow and bot script to automatically sync labels from linked issues to pull requests. (#1716)
+- Added fork E2E validation coverage for linked-issue label sync workflows. (#1716)
 - feat(bot): warn PR authors that unlinked PRs will be closed (#1886)
 
 ## [0.2.0] - 2026-11-02
