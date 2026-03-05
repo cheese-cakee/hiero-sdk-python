@@ -22,7 +22,6 @@ permissions:
 
 jobs:
   compute-labels:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name }}
     runs-on: hl-sdk-py-lin-md
     steps:
       - name: Harden the runner
@@ -34,6 +33,9 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: main
+          sparse-checkout: |
+            .github/scripts/sync-issue-labels.js
+          sparse-checkout-cone-mode: false
 
       - name: Compute linked issue labels
         id: compute
